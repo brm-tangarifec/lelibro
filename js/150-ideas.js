@@ -399,6 +399,28 @@ if(jQuery("#upload-video").length>0){
 						jQuery('input').val('');
 						jQuery('.btn-submit').show('fade');
 						//dataLayer.push({'event': 'registro-camisetas-exitoso'});
+
+						//Animaciones
+						$('.form-group, .checkbox')
+							.velocity({
+								height: 0,
+								opacity: 0
+							}, {
+								duration: 800,
+								easing: 'ease-in-out'
+
+							});
+
+						$(this)
+							.velocity({
+								backgroundColor: '#007edd',
+								width: '100%',
+								complete: function () {
+									$(this).text('Tu idea fue envíada');
+								}
+							});
+						
+						$(this).attr('readonly', 'readonly');
 					}
 				}
 
