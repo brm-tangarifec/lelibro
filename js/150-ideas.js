@@ -32,7 +32,10 @@ top.location.href = self.location.href;
 }
 
 
-
+$.validator.addMethod('filesize', function (value, element, param) {
+	//console.log(element.files[0].size);
+    return this.optional(element) || (element.files[0].size <= param)
+}, 'File size must be less than {0}');
 
 	//Mostrar tipo de archivo para compartir
 	$('.btn-up').click(function(e) {
@@ -46,10 +49,21 @@ top.location.href = self.location.href;
 
 			$('.form-upload').addClass('hidden');
 			$('.form-up-img').removeClass('hidden');
-			jQuery('.form-up-img .content-upload').html('<label for="upload-img"><img src="images/upload.svg"></label><input type="file" name="upload-img" id="upload-img">');
+			jQuery('.form-up-img .content-upload').html('<label for="upload-img"><img src="images/upload.svg"></label><input type="file" name="upload-img" id="upload-img" accept="image/*">');
+			jQuery("#upload-img").rules("add", {
+					required: true,
+					accept:"image/*",
+					filesize: 1048576,
+					messages: {
+						required: "Por favor seleccione una imagen",
+						accept: "La extensión no es valida",
+						filesize: "El archivo no debe ser mayor a 1MB"
+						}
+					});
 			if(jQuery('#upload-video').length>0){
 				jQuery('#upload-video').prev().remove();
 				jQuery('#upload-video').remove();
+
 			}
 
 		};
@@ -62,10 +76,22 @@ top.location.href = self.location.href;
 
 			$('.form-upload').addClass('hidden');
 			$('.form-up-video').removeClass('hidden');
-			jQuery('.form-up-video .content-upload').html('<label for="upload-video"><img src="images/upload.svg"></label><input type="file" name="upload-video" id="upload-video">');
+			jQuery('.form-up-video .content-upload').html('<label for="upload-video"><img src="images/upload.svg"></label><input type="file" name="upload-video" id="upload-video" accept="video/*">');
+			jQuery("#upload-video").rules("add", {
+					required: true,
+					accept:"video/*",
+					filesize: 26214400,
+					messages: {
+						required: "Seleccione un archivo de v&iacute;deo",
+						accept: "La extensi&oacute;n no es v&aacute;lida",
+						filesize: "El archivo no debe ser mayor a 25 MB"
+					}
+				});
 			if(jQuery('#upload-img').length>0){
 				jQuery('#upload-img').prev().remove();
 				jQuery('#upload-img').remove();
+
+				
 			}
 
 
@@ -249,6 +275,18 @@ top.location.href = self.location.href;
 
 
 /*Funciones varias*/
+
+/*Validar archivos file*/
+if(jQuery("#upload-img").length>0){
+	console.log('hola, imagen');
+
+}
+if(jQuery("#upload-video").length>0){
+	console.log('hola, video');
+
+}
+ //accept:"image/*"
+/*Fin validacion*/
 		/*Ciudades*/
 	jQuery('#departamento').on('change',function() {
    //console.log('Hola soy un select');
@@ -283,11 +321,42 @@ top.location.href = self.location.href;
 
 	/*Registro*/
 	jQuery('#submit').click(function(){
-		console.log('hola');
-		
-		if(jQuery('#idea').valid()){
+		//console.log('hola');
+		if(jQuery('#upload-img').length>0){
+			var imagen = $("#idea #upload-img").val();
+			imagen= imagen.split('.');
+			var img= '';
+			var ext =false;
+			//console.log(imagen[(imagen.length -1)]);
+		    ext=imagen[(imagen.length -1)];
+				if ( ext === 'jpg' || ext ==='png' || ext === 'gif' || ext === 'jpeg' || ext === 'JPG' || ext === 'PNG' || ext ==='GIF' || ext === 'JPEG') {
+					img=true;
+				}else {
+					$("#info").addClass('error');
+						$("#info").html('<span style="color:#f04124;">Por favor selecciona una imagen.</span>');
+			}
+		}else{
 
+			/*Video*/
+			var video = $("#idea #upload-video").val();
+				video= video.split('.');
+				var video2= '';
+				var ext2 =false;
+				//console.log(video[(video.length -1)]);
+			    ext2=video[(video.length -1)];
+			    ext2=ext2.toLowerCase();
+					if ( ext2 === 'mp4' || ext2 ==='wmv' || ext2 === 'mpg' || ext2 === 'mpeg' || ext2 === '3gp' || ext2 === '3g2' || ext2 === 'avi') {
+						video2=true;
+					}else {
+						$("#info").addClass('error');
+							$("#info").html('<span style="color:#f04124;">Por favor selecciona una video.</span>');
+			}
+		}
+		
+		
+		if(jQuery('#idea').valid() && (img || video2)){
 		var nombre=jQuery('#nombre').val(),
+		jQuery('.btn-submit').hide('float');
 		email=jQuery('#email').val(),
 		idea=jQuery('#ideaE').val(),
 		tipoDoc=jQuery('#tipoD').val(),
@@ -299,11 +368,16 @@ top.location.href = self.location.href;
 		aceptar=jQuery('#autorizo').val(),
 		terminos=jQuery('#terminos').val(),
 		url="eventos.php";
+		var formData = new FormData(document.getElementById("idea"));
 		jQuery.ajax({
 				url: 'eventos.php',
 				dataType:'json' ,
+				data: formData,
+				cache: false,
+				contentType: false,
+				processData: false,
 				type: 'POST',
-				data: {
+				/*data: {
 					nombre:nombre,
 					email:email,
 					idea:idea,
@@ -316,19 +390,16 @@ top.location.href = self.location.href;
 					autorizo:aceptar,
 					terminos:terminos,
 					vrtCrt:'registrar'
-				},
+				},*/
 				success: function (data){
 					console.log(data);
-					/*if(data=='exitoso'){
+					if(data=='exitoso'){
 
-						jQuery('.exitoso').removeClass('hidden');
-						jQuery('.clearI').val('');
-						jQuery('.registrousu').hide('fade');
-						jQuery('.multipacks').hide('fade');
-						
-						jQuery('#btn-registro').show('fade');
-						dataLayer.push({'event': 'registro-camisetas-exitoso'});
-					}*/
+						//jQuery('.exitoso').removeClass('hidden');
+						jQuery('input').val('');
+						jQuery('.btn-submit').show('fade');
+						//dataLayer.push({'event': 'registro-camisetas-exitoso'});
+					}
 				}
 
 			});
@@ -339,10 +410,69 @@ top.location.href = self.location.href;
 	});
 
 	/*F registro*/
+
+	/*Tamaño imagen*/
+	function displayPreview(files,id) {
+		//console.log(files.type);
+		if(files.type.match('image.*') || files.type.match('video.*')){
+				
+			var reader = new FileReader();
+			var img = new Image();
+			reader.onload = function (e) {
+				img.src = e.target.result;
+				fileSize = Math.round(files.size / 1024);
+				//alert("File size is " + fileSize + " kb");
+				img.onload = function () {
+					console.log(fileSize);
+					console.log(id);
+					if(id=="upload-img" && fileSize>880){
+						jQuery('#'+id).val('');
+						jQuery('#'+id).parent().next().remove();
+						jQuery('#'+id).parent().after('<div class="mensaje">El archivo no debe pesar más de 3MB </div>');
+					}else{
+						jQuery('#'+id).parent().next().remove();
+						//jQuery('#'+id).parent().after('<div class="mensaje"></div>');
+					}
+	
+				};
+				if(id=="upload-video" && fileSize>26000){
+						//console.log('Entra acá');
+						jQuery('#'+id).val('');
+						jQuery('#'+id).parent().next().remove();
+						jQuery('#'+id).parent().after('<div class="mensaje">El archivo no debe pesar más de 25MB </div>');
+				}else{
+					jQuery('#'+id).parent().next().remove();
+					//jQuery('#'+id).parent().after('<div class="mensaje"></div>');
+				}
+			};
+			reader.readAsDataURL(files);
+		}else{
+			jQuery('#'+id).val('');
+			jQuery('#'+id).parent().after('<div class="mensaje">Formato no v&aacute;lido</div>');
+		}
+	}
+	jQuery(document).on("change",'#upload-img',function () {
+		var input=jQuery(this).attr('id');
+		//console.log(input);
+		var file = this.files[0];
+		displayPreview(file,input);
+				 
+		//console.log('cambia');
+	});
+	jQuery(document).on("change",'#upload-video',function () {
+		var input=jQuery(this).attr('id');
+		//console.log(input);
+		var file = this.files[0];
+		displayPreview(file,input);
+		//console.log('cambia');
+	});
+	/*Tamaño imagen*/
 	/*F fuciones varias*/
 
+/*Subir imagenes*/
+// 'use strict';
 
 
-
-
+       /*F Subir imagenes*/
+/*No tocar*/
 });

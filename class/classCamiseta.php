@@ -37,6 +37,7 @@ class camisetaFt {
 		$dbdata->nombreCompleto = $campos['nombre'];
 		$dbdata->email = $campos['email'];
 		$dbdata->idea = $campos['idea'];
+		$dbdata->multimedia = $campos['urlArchivo'];
 		$dbdata->idDepto = $campos['idDepto'];
 		$dbdata->idCiudad = $campos['idCiudad'];
 		$dbdata->direccion = $campos['direccion'];
@@ -98,5 +99,42 @@ class camisetaFt {
 		$usuario->free();
 		return $total;
 	}
+
+	function subeArchivo($campos){
+		//printVar($campos);
+		
+			//ini_set('display_errors', '1');		
+			$rutaDir=$_SERVER['DOCUMENT_ROOT'].dirname($_SERVER['REQUEST_URI']).'/files/';
+			//$rutaDir=dirname($_SERVER['REQUEST_URI']).'/files/';
+			printVar($rutaDir);
+			//$rur= $_SERVER['SERVER_NAME'].dirname($_SERVER['REQUEST_URI']).'/facturas/'.$parametros[0];
+			
+			if(file_exists($rutaDir)){ // verifica que la carpeta esta creada 
+				//++++++
+				$ext=explode('.',$campos['archivo']['name']);
+					//var_dump($campos['archivo']);
+					$imgOriginal=$campos['archivo']['name'];
+					$temporal=$campos['archivo']['tmp_name'];
+					$imgFinal=$campos['documento'].'-'.date('Y_m_d_H_i_s').'.'.$ext[1];
+					//printVar($imgFinal);
+					$urlDef=$rutaDir.$imgFinal;
+					$guarda=move_uploaded_file($temporal, $urlDef);//$guarda true si guardo la factura en la carpeta recien creada
+					//printVar($guarda);
+					if ($guarda) { //si guarda la imagen en la carpeta
+
+							return 'files/'.$imgFinal;
+						
+					}else{// si no gurado la imagen en la carpeta
+						return 'errorG';
+
+					}
+					
+
+				//+++++++
+				//echo 'si existe la carpeta';
+			
+				
+	}
+}
 }
 ?>

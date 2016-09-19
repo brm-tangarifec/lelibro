@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.6, created on 2016-09-16 17:48:36
+<?php /* Smarty version 2.6.6, created on 2016-09-17 00:47:39
          compiled from index.html */ ?>
 <!DOCTYPE html><!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="es-CO"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang="es-CO"> <![endif]-->
@@ -62,6 +62,13 @@
             
           </div>
           <p>Puedes subir una imagen hasta 3 mb.</p>
+           <div id="progress" class="progress">
+               <div class="progress-bar progress-bar-success"></div>
+           </div>
+
+           <!-- The container for the uploaded files -->
+        <div id="files" class="files"></div>
+    
         </div>
         <!--/-Subir img-->
         <!--Subir video-->
@@ -75,6 +82,7 @@
         <!--Idea-->
         <div class="form-group form-textarea">
           <label for="ideaE"> Escribe tu idea</label>
+          <input type="hidden" name="vrtCrt" id="vrtCrt" value="registrar">
           <textarea class="form-control" name="ideaE" id="ideaE"></textarea>
         </div>
         <!--/-Idea-->
@@ -203,5 +211,18 @@
   <!--/-Footer-->
   <!--Scripts-->
   <script src="js/libs.min.js"></script>
+  <script src="js/libs/additional-methods.js"></script>
+    <script src="js/jquery.ui.widget.js"></script>
+    <script src="js/img/jquery.iframe-transport.js"></script>
+    <!-- The basic File Upload plugin -->
+    <script src="js/img/jquery.fileupload.js"></script>
+    <!-- The File Upload processing plugin -->
+    <script src="js/img/jquery.fileupload-process.js"></script>
+    <!-- The File Upload image preview & resize plugin -->
+    <script src="js/img/jquery.fileupload-image.js"></script>
+    <!-- The File Upload video preview plugin -->
+    <script src="js/img/jquery.fileupload-video.js"></script>
+    <!-- The File Upload validation plugin -->
+    <script src="js/img/jquery.fileupload-validate.js"></script>
   <script src="js/150-ideas.js"></script>
 </body></html>

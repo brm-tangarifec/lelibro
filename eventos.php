@@ -1,6 +1,6 @@
 <?php
 require('db/requires.php');
-ini_set('display_errors','0');
+ini_set('display_errors','1');
 /*se ejecutan eventos dependiendo de lo solicitado*/
 $varPost=filter_input_array(INPUT_POST);
 $camiseta=new camisetaFt();
@@ -37,24 +37,28 @@ switch ($vrtCtr) {
 	case 'registrar':
 		# code...
 		printVar($varPost);
+		printVar($_FILES);
 		/*Datos de usauario*/
 		if(isset($varPost['email']) && $varPost['email']!='' && isset($varPost['autorizo']) && $varPost['autorizo']=='S'){
 
+			$campos['archivo'] = $_FILES['upload-img'];
 
 		$campos['nombre']=utf8_decode($varPost['nombre']);
 		$campos['email']=$varPost['email'];
-		$campos['idDepto']=$varPost['idDepto'];
-		$campos['idea']=utf8_decode($varPost['idea']);
-		$campos['idCiudad']=$varPost['idCiudad'];
+		$campos['idDepto']=$varPost['departamento'];
+		$campos['idea']=utf8_decode($varPost['ideaE']);
+		$campos['idCiudad']=$varPost['ciudad'];
 		$campos['direccion']=$varPost['direccion'];
-		$campos['tipoDocumento']=$varPost['tipodoc'];
-		$campos['documento']=$varPost['documento'];
+		$campos['tipoDocumento']=$varPost['tipoD'];
+		$campos['documento']=$varPost['numDoc'];
 		$campos['fnacimiento']=$varPost['fechaN'];
 		$campos['autorizaNestle']=$varPost['autorizo'];
 		$campos['terminos']=$varPost['terminos'];
-		
+		$subida=$camiseta->subeArchivo($campos);
+		$campos['urlArchivo']=$subida;
+
+		//printVar($subida,'Hola s');
 		$guardaUsu=$camiseta->registraSolicitante($campos);
-		printVar($guardaUsu);
 		die();
 		if($guardaUsu>0){
 			$mensaje="exitoso";

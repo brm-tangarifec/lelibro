@@ -15,5 +15,4 @@ ini_set('upload_max_filesize', '64M');
 error_reporting(E_ALL | E_STRICT);
 require('class/UploadHandler.php');
 $upload_handler = new UploadHandler();
-
 ?>
