@@ -129,11 +129,14 @@ $.validator.addMethod('filesize', function (value, element, param) {
 
 	if ( alto > 824 && screenWidth > 1400 ) {
 
+			$('html, body').css('height', '100%');
+
 			$('footer').addClass('pos-absolute');
 
 
 		}else{
 			
+			$('html, body').removeAttr('style');
 			$('footer').removeClass('pos-absolute');
 	};
 
@@ -143,11 +146,13 @@ $.validator.addMethod('filesize', function (value, element, param) {
 
 		if ( alto > 824 && screenWidth > 1400 ) {
 
+			$('html, body').css('height', '100%');
+
 			$('footer').addClass('pos-absolute');
 
 
 		}else{
-			
+			$('html, body').removeAttr('style');
 			$('footer').removeClass('pos-absolute');
 		};
 	});
